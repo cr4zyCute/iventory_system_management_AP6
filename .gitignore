@@ -1,0 +1,38 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+#Dependencies
+backend/node_modules/
+iventory-system/node_modules/
+
+#Build Folders
+backend/dist/
+iventory-system/dist/
+iventory-system/dist-ssr/
+
+#Environment Files
+.env
+backend/.env
+iventory-system/.env
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
