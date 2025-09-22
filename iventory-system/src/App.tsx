@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { testConnection } from './api/api';
+import Login from './pages/login';
 import './App.css';
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
   return (
     <div className="app">
       <h1>Inventory System</h1>
-      
+
       <div className="status">
         <h2>Connection Status</h2>
         {loading ? (
@@ -39,10 +40,7 @@ function App() {
         )}
       </div>
 
-      <div className="content">
-        <h2>Welcome to the Inventory System</h2>
-        <p>Your frontend is now connected to the backend!</p>
-      </div>
+      <Login />
     </div>
   );
 }
