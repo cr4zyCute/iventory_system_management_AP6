@@ -1,4 +1,4 @@
-const db = require('../database');
+const db = require('../../database');
 
 // NOTE: For production, store hashed passwords (e.g., bcrypt). This example uses plain text for simplicity.
 exports.login = async (req, res) => {
