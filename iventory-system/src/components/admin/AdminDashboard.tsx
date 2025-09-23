@@ -128,26 +128,24 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         <div className="dashboard-grid">
-            {/* System Management - Admin Only */}
-            {hasPermission(user?.role || 'staff', 'settings.update') && (
-              <div className="dashboard-card">
-                <div className="card-header">
-                  <h3 className="card-title">
-                    <span className="card-icon">
-                      <FontAwesomeIcon icon={faCog} />
-                    </span>
-                    System Management
-                  </h3>
-                </div>
-                <div className="card-content">
-                  <p>Manage system settings, configurations, and global preferences.</p>
-                  <div className="card-actions">
-                    <button className="action-btn primary">System Settings</button>
-                    <button className="action-btn secondary">Backup & Restore</button>
-                  </div>
+            {/* Inventory Overview - Primary Feature */}
+            <div className="dashboard-card">
+              <div className="card-header">
+                <h3 className="card-title">
+                  <span className="card-icon">
+                    <FontAwesomeIcon icon={faBox} />
+                  </span>
+                  Inventory Management
+                </h3>
+              </div>
+              <div className="card-content">
+                <p>Complete overview and management of all inventory items and categories.</p>
+                <div className="card-actions">
+                  <button className="action-btn primary">Manage Products</button>
+                  <button className="action-btn secondary">Categories</button>
                 </div>
               </div>
-            )}
+            </div>
 
             {/* User Management - Admin Only */}
             {hasPermission(user?.role || 'staff', 'users.create') && (
@@ -170,26 +168,7 @@ const AdminDashboard: React.FC = () => {
               </div>
             )}
 
-            {/* Inventory Overview */}
-            <div className="dashboard-card">
-              <div className="card-header">
-                <h3 className="card-title">
-                  <span className="card-icon">
-                    <FontAwesomeIcon icon={faBox} />
-                  </span>
-                  Inventory Overview
-                </h3>
-              </div>
-              <div className="card-content">
-                <p>Complete overview of all inventory items and categories.</p>
-                <div className="card-actions">
-                  <button className="action-btn primary">View All Items</button>
-                  <button className="action-btn secondary">Categories</button>
-                </div>
-              </div>
-            </div>
-
-            {/* Reports & Analytics */}
+            {/* Analysis */}
             {hasPermission(user?.role || 'staff', 'reports.audit') && (
               <div className="dashboard-card">
                 <div className="card-header">
@@ -197,35 +176,14 @@ const AdminDashboard: React.FC = () => {
                     <span className="card-icon">
                       <FontAwesomeIcon icon={faChartBar} />
                     </span>
-                    Reports & Analytics
+                    Analysis
                   </h3>
                 </div>
                 <div className="card-content">
-                  <p>Generate comprehensive reports and view system analytics.</p>
+                  <p>Advanced data analysis, trends, and business intelligence insights.</p>
                   <div className="card-actions">
-                    <button className="action-btn primary">Generate Reports</button>
-                    <button className="action-btn secondary">Analytics</button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Audit Logs - Admin Only */}
-            {hasPermission(user?.role || 'staff', 'audit.read') && (
-              <div className="dashboard-card">
-                <div className="card-header">
-                  <h3 className="card-title">
-                    <span className="card-icon">
-                      <FontAwesomeIcon icon={faClipboardList} />
-                    </span>
-                    Audit Logs
-                  </h3>
-                </div>
-                <div className="card-content">
-                  <p>View system audit logs and user activity tracking.</p>
-                  <div className="card-actions">
-                    <button className="action-btn primary">View Logs</button>
-                    <button className="action-btn secondary">Export Logs</button>
+                    <button className="action-btn primary">Data Analysis</button>
+                    <button className="action-btn secondary">Trend Reports</button>
                   </div>
                 </div>
               </div>
@@ -242,13 +200,55 @@ const AdminDashboard: React.FC = () => {
                 </h3>
               </div>
               <div className="card-content">
-                <p>Monitor system performance and health metrics.</p>
+                <p>Monitor system performance, health metrics, and server status.</p>
                 <div className="card-actions">
                   <button className="action-btn primary">Health Check</button>
                   <button className="action-btn secondary">Performance</button>
                 </div>
               </div>
             </div>
+
+            {/* Audit Logs - Admin Only */}
+            {hasPermission(user?.role || 'staff', 'audit.read') && (
+              <div className="dashboard-card">
+                <div className="card-header">
+                  <h3 className="card-title">
+                    <span className="card-icon">
+                      <FontAwesomeIcon icon={faClipboardList} />
+                    </span>
+                    Audit Logs
+                  </h3>
+                </div>
+                <div className="card-content">
+                  <p>View system audit logs and comprehensive user activity tracking.</p>
+                  <div className="card-actions">
+                    <button className="action-btn primary">View Logs</button>
+                    <button className="action-btn secondary">Export Logs</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* System Management - Admin Only */}
+            {hasPermission(user?.role || 'staff', 'settings.update') && (
+              <div className="dashboard-card">
+                <div className="card-header">
+                  <h3 className="card-title">
+                    <span className="card-icon">
+                      <FontAwesomeIcon icon={faCog} />
+                    </span>
+                    System Management
+                  </h3>
+                </div>
+                <div className="card-content">
+                  <p>Manage system settings, configurations, and global preferences.</p>
+                  <div className="card-actions">
+                    <button className="action-btn primary">System Settings</button>
+                    <button className="action-btn secondary">Backup & Restore</button>
+                  </div>
+                </div>
+              </div>
+            )}
         </div>
       </div>
     </MainLayout>

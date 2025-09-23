@@ -317,11 +317,7 @@ router.get('/reports', async (req, res) => {
     
     // Get top products (mock data for now)
     const topProducts = [
-      { id: 1, name: 'Laptop Dell XPS 13', sales: 25, revenue: 32499.75 },
-      { id: 2, name: 'Wireless Mouse', sales: 85, revenue: 2549.15 },
-      { id: 3, name: 'Office Chair', sales: 15, revenue: 4499.85 },
-      { id: 4, name: 'A4 Paper Ream', sales: 120, revenue: 1078.80 },
-      { id: 5, name: 'Printer Ink Cartridge', sales: 45, revenue: 1799.55 }
+    
     ];
     
     // Get recent stock movements

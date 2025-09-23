@@ -114,7 +114,7 @@ const CategoryManagement: React.FC = () => {
       <div className="admin-dashboard">
         <div className="content-header">
           <h1 className="content-title">Category Management</h1>
-          <p className="content-subtitle">Manage product categories and classifications</p>
+         
         </div>
 
         <div className="quick-actions">

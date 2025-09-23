@@ -54,19 +54,10 @@ const Reports: React.FC = () => {
         totalSales: 342,
         monthlyRevenue: 45230,
         topProducts: [
-          { id: 1, name: 'Laptop Dell XPS 13', sales: 25, revenue: 32499.75 },
-          { id: 2, name: 'Wireless Mouse', sales: 85, revenue: 2549.15 },
-          { id: 3, name: 'Office Chair', sales: 15, revenue: 4499.85 },
-          { id: 4, name: 'A4 Paper Ream', sales: 120, revenue: 1078.80 },
-          { id: 5, name: 'Printer Ink Cartridge', sales: 45, revenue: 1799.55 }
+        
         ],
         stockMovements: [
-          { id: 1, product_name: 'Laptop Dell XPS 13', movement_type: 'out', quantity: 2, date: '2025-09-23' },
-          { id: 2, product_name: 'Wireless Mouse', movement_type: 'in', quantity: 50, date: '2025-09-22' },
-          { id: 3, product_name: 'A4 Paper Ream', movement_type: 'out', quantity: 10, date: '2025-09-22' },
-          { id: 4, product_name: 'Office Chair', movement_type: 'in', quantity: 5, date: '2025-09-21' },
-          { id: 5, product_name: 'Printer Ink Cartridge', movement_type: 'out', quantity: 3, date: '2025-09-21' }
-        ]
+          ]
       });
     } finally {
       setLoading(false);
@@ -103,7 +94,7 @@ const Reports: React.FC = () => {
       <div className="admin-dashboard">
         <div className="content-header">
           <h1 className="content-title">Reports & Analytics</h1>
-          <p className="content-subtitle">Business intelligence and performance metrics</p>
+          
         </div>
 
         <div className="quick-actions">

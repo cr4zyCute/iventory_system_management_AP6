@@ -209,7 +209,7 @@ const ProductManagement: React.FC = () => {
       <div className="admin-dashboard">
         <div className="content-header">
           <h1 className="content-title">Product Management</h1>
-          <p className="content-subtitle">Manage inventory products and stock levels</p>
+        
         </div>
 
         <div className="quick-actions">
@@ -231,88 +231,97 @@ const ProductManagement: React.FC = () => {
           </div>
         )}
 
-        {/* Create / Edit Form */}
+        {/* Product Form Modal */}
         {showForm && (
-          <div className="dashboard-card" style={{ marginBottom: '20px' }}>
-            <div className="card-header">
-              <h3 className="card-title">{editingId ? 'Edit Product' : 'Add New Product'}</h3>
-            </div>
-            <div className="card-content">
-              <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
-                <div>
-                  <label>Name</label>
-                  <input className="form-input" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
-                </div>
-                <div>
-                  <label>SKU</label>
-                  <input className="form-input" value={form.sku} onChange={e => setForm({ ...form, sku: e.target.value })} required />
-                </div>
-                <div>
-                  <label>Barcode (Optional)</label>
-                  <input className="form-input" value={form.barcode} onChange={e => setForm({ ...form, barcode: e.target.value })} />
-                </div>
-                <div>
-                  <label>Category</label>
-                  <select className="form-select" value={form.category_id} onChange={e => setForm({ ...form, category_id: Number(e.target.value) })} required>
-                    <option value={0} disabled>Select category</option>
-                    {categories.map(c => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label>Supplier (Optional)</label>
-                  <select className="form-select" value={form.supplier_id} onChange={e => setForm({ ...form, supplier_id: Number(e.target.value) })}>
-                    <option value={0}>No supplier</option>
-                    {suppliers.map(s => (
-                      <option key={s.id} value={s.id}>{s.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label>Unit Price</label>
-                  <input type="number" step="0.01" className="form-input" value={form.unit_price} onChange={e => setForm({ ...form, unit_price: Number(e.target.value) })} required />
-                </div>
-                <div>
-                  <label>Cost Price</label>
-                  <input type="number" step="0.01" className="form-input" value={form.cost_price} onChange={e => setForm({ ...form, cost_price: Number(e.target.value) })} required />
-                </div>
-                <div>
-                  <label>Stock Quantity</label>
-                  <input type="number" className="form-input" value={form.stock_quantity} onChange={e => setForm({ ...form, stock_quantity: Number(e.target.value) })} required />
-                </div>
-                <div>
-                  <label>Min Stock Level</label>
-                  <input type="number" className="form-input" value={form.min_stock_level} onChange={e => setForm({ ...form, min_stock_level: Number(e.target.value) })} required />
-                </div>
-                <div>
-                  <label>Max Stock Level</label>
-                  <input type="number" className="form-input" value={form.max_stock_level} onChange={e => setForm({ ...form, max_stock_level: Number(e.target.value) })} required />
-                </div>
-                <div>
-                  <label>Unit of Measure</label>
-                  <select className="form-select" value={form.unit_of_measure} onChange={e => setForm({ ...form, unit_of_measure: e.target.value })}>
-                    <option value="pcs">Pieces</option>
-                    <option value="kg">Kilograms</option>
-                    <option value="lbs">Pounds</option>
-                    <option value="box">Box</option>
-                    <option value="pack">Pack</option>
-                    <option value="set">Set</option>
-                  </select>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input id="is_active" type="checkbox" checked={form.is_active} onChange={e => setForm({ ...form, is_active: e.target.checked })} />
-                  <label htmlFor="is_active">Active</label>
-                </div>
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <label>Description</label>
-                  <textarea className="form-input" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={3} />
-                </div>
-                <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                  <button type="button" className="action-btn secondary" onClick={() => { setShowForm(false); setEditingId(null); }}>Cancel</button>
-                  <button type="submit" className="action-btn primary">{editingId ? 'Update Product' : 'Create Product'}</button>
-                </div>
-              </form>
+          <div className="modal-overlay" onClick={() => { setShowForm(false); setEditingId(null); }}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3 className="modal-title">{editingId ? 'Edit Product' : 'Add New Product'}</h3>
+                <button 
+                  className="modal-close" 
+                  onClick={() => { setShowForm(false); setEditingId(null); }}
+                  type="button"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+                  <div>
+                    <label>Name</label>
+                    <input className="form-input" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
+                  </div>
+                  <div>
+                    <label>SKU</label>
+                    <input className="form-input" value={form.sku} onChange={e => setForm({ ...form, sku: e.target.value })} required />
+                  </div>
+                  <div>
+                    <label>Barcode (Optional)</label>
+                    <input className="form-input" value={form.barcode} onChange={e => setForm({ ...form, barcode: e.target.value })} />
+                  </div>
+                  <div>
+                    <label>Category</label>
+                    <select className="form-select" value={form.category_id} onChange={e => setForm({ ...form, category_id: Number(e.target.value) })} required>
+                      <option value={0} disabled>Select category</option>
+                      {categories.map(c => (
+                        <option key={c.id} value={c.id}>{c.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label>Supplier (Optional)</label>
+                    <select className="form-select" value={form.supplier_id} onChange={e => setForm({ ...form, supplier_id: Number(e.target.value) })}>
+                      <option value={0}>No supplier</option>
+                      {suppliers.map(s => (
+                        <option key={s.id} value={s.id}>{s.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label>Unit Price</label>
+                    <input type="number" step="0.01" className="form-input" value={form.unit_price} onChange={e => setForm({ ...form, unit_price: Number(e.target.value) })} required />
+                  </div>
+                  <div>
+                    <label>Cost Price</label>
+                    <input type="number" step="0.01" className="form-input" value={form.cost_price} onChange={e => setForm({ ...form, cost_price: Number(e.target.value) })} required />
+                  </div>
+                  <div>
+                    <label>Stock Quantity</label>
+                    <input type="number" className="form-input" value={form.stock_quantity} onChange={e => setForm({ ...form, stock_quantity: Number(e.target.value) })} required />
+                  </div>
+                  <div>
+                    <label>Min Stock Level</label>
+                    <input type="number" className="form-input" value={form.min_stock_level} onChange={e => setForm({ ...form, min_stock_level: Number(e.target.value) })} required />
+                  </div>
+                  <div>
+                    <label>Max Stock Level</label>
+                    <input type="number" className="form-input" value={form.max_stock_level} onChange={e => setForm({ ...form, max_stock_level: Number(e.target.value) })} required />
+                  </div>
+                  <div>
+                    <label>Unit of Measure</label>
+                    <select className="form-select" value={form.unit_of_measure} onChange={e => setForm({ ...form, unit_of_measure: e.target.value })}>
+                      <option value="pcs">Pieces</option>
+                      <option value="kg">Kilograms</option>
+                      <option value="lbs">Pounds</option>
+                      <option value="box">Box</option>
+                      <option value="pack">Pack</option>
+                      <option value="set">Set</option>
+                    </select>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <input id="is_active" type="checkbox" checked={form.is_active} onChange={e => setForm({ ...form, is_active: e.target.checked })} />
+                    <label htmlFor="is_active">Active</label>
+                  </div>
+                  <div style={{ gridColumn: '1 / -1' }}>
+                    <label>Description</label>
+                    <textarea className="form-input" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={3} />
+                  </div>
+                  <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
+                    <button type="button" className="action-btn secondary" onClick={() => { setShowForm(false); setEditingId(null); }}>Cancel</button>
+                    <button type="submit" className="action-btn primary">{editingId ? 'Update Product' : 'Create Product'}</button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         )}
