@@ -17,8 +17,7 @@ export const testConnection = async (): Promise<TestResponse> => {
   }
 };
 
-// Add more API functions here as your backend grows
-
+//APIs
 export interface LoginRequest {
   email: string;
   password: string;

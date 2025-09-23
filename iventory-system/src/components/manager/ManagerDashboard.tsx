@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { hasPermission } from '../../common/permissions';
 import MainLayout from '../layout/MainLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,12 +18,16 @@ import './css/dashboard.css';
 
 const ManagerDashboard: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [backendStatus, setBackendStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
   const [stats, setStats] = useState({
     totalProducts: 0,
     lowStockItems: 0,
-    pendingOrders: 0,
-    monthlyRevenue: 0
+    totalSuppliers: 0,
+    monthlyRevenue: 0 as number | string,
+    totalStaff: 0,
+    pendingPurchaseOrders: 0,
+    recentMovements: 0
   });
 
   useEffect(() => {
@@ -42,14 +47,43 @@ const ManagerDashboard: React.FC = () => {
 
     const loadDashboardStats = async () => {
       try {
+        // Load real data from manager API
+        const response = await fetch('/api/manager/stats');
+        if (response.ok) {
+          const data = await response.json();
+          setStats({
+            totalProducts: data.totalProducts || 0,
+            lowStockItems: data.lowStockItems || 0,
+            totalSuppliers: data.totalSuppliers || 0,
+            monthlyRevenue: data.totalSales || 0,
+            totalStaff: data.totalStaff || 0,
+            pendingPurchaseOrders: 0, // Will be implemented when PO system is ready
+            recentMovements: data.recentMovements || 0
+          });
+        } else {
+          // Fallback to mock data
+          setStats({
+            totalProducts: 125,
+            lowStockItems: 12,
+            totalSuppliers: 8,
+            monthlyRevenue: 28450,
+            totalStaff: 15,
+            pendingPurchaseOrders: 3,
+            recentMovements: 24
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load dashboard stats:', error);
+        // Fallback data
         setStats({
           totalProducts: 125,
           lowStockItems: 12,
-          pendingOrders: 8,
-          monthlyRevenue: 28450
+          totalSuppliers: 8,
+          monthlyRevenue: 28450,
+          totalStaff: 15,
+          pendingPurchaseOrders: 3,
+          recentMovements: 24
         });
-      } catch (error) {
-        console.error('Failed to load dashboard stats:', error);
       }
     };
 
@@ -83,7 +117,7 @@ const ManagerDashboard: React.FC = () => {
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon">
+            <div className="stat-icon" style={{ backgroundColor: '#ffc107' }}>
               <FontAwesomeIcon icon={faExclamationTriangle} />
             </div>
             <div className="stat-content">
@@ -93,11 +127,20 @@ const ManagerDashboard: React.FC = () => {
           </div>
           <div className="stat-card">
             <div className="stat-icon">
-              <FontAwesomeIcon icon={faClipboardList} />
+              <FontAwesomeIcon icon={faBuilding} />
             </div>
             <div className="stat-content">
-              <div className="stat-value">{stats.pendingOrders}</div>
-              <div className="stat-label">Pending Orders</div>
+              <div className="stat-value">{stats.totalSuppliers}</div>
+              <div className="stat-label">Suppliers</div>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon">
+              <FontAwesomeIcon icon={faUsers} />
+            </div>
+            <div className="stat-content">
+              <div className="stat-value">{stats.totalStaff}</div>
+              <div className="stat-label">Team Members</div>
             </div>
           </div>
           <div className="stat-card">
@@ -105,8 +148,17 @@ const ManagerDashboard: React.FC = () => {
               <FontAwesomeIcon icon={faDollarSign} />
             </div>
             <div className="stat-content">
-              <div className="stat-value">${stats.monthlyRevenue.toLocaleString()}</div>
+              <div className="stat-value">₱{Number(stats.monthlyRevenue).toLocaleString()}</div>
               <div className="stat-label">Monthly Revenue</div>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon">
+              <FontAwesomeIcon icon={faArrowsRotate} />
+            </div>
+            <div className="stat-content">
+              <div className="stat-value">{stats.recentMovements}</div>
+              <div className="stat-label">Recent Movements</div>
             </div>
           </div>
         </div>
@@ -124,8 +176,8 @@ const ManagerDashboard: React.FC = () => {
                 <div className="card-content">
                   <p>Manage inventory items, stock levels, and product information.</p>
                   <div className="card-actions">
-                    <button className="action-btn primary">Manage Items</button>
-                    <button className="action-btn secondary">Stock Levels</button>
+                    <button className="action-btn primary" onClick={() => navigate('/manager/inventory')}>Manage Items</button>
+                    <button className="action-btn secondary" onClick={() => navigate('/manager/stock-movements')}>Stock Movements</button>
                   </div>
                 </div>
               </div>
@@ -143,8 +195,8 @@ const ManagerDashboard: React.FC = () => {
                 <div className="card-content">
                   <p>Review, approve and manage purchase orders from suppliers.</p>
                   <div className="card-actions">
-                    <button className="action-btn primary">Pending Approvals</button>
-                    <button className="action-btn secondary">Order History</button>
+                    <button className="action-btn primary" onClick={() => navigate('/manager/purchase-orders')}>Pending Approvals</button>
+                    <button className="action-btn secondary" onClick={() => navigate('/manager/purchase-orders')}>Order History</button>
                   </div>
                 </div>
               </div>
@@ -161,8 +213,8 @@ const ManagerDashboard: React.FC = () => {
               <div className="card-content">
                 <p>Monitor staff activities and manage team performance.</p>
                 <div className="card-actions">
-                  <button className="action-btn primary">View Staff</button>
-                  <button className="action-btn secondary">Performance</button>
+                  <button className="action-btn primary" onClick={() => navigate('/manager/staff')}>View Staff</button>
+                  <button className="action-btn secondary" onClick={() => navigate('/manager/staff')}>Performance</button>
                 </div>
               </div>
             </div>
@@ -179,8 +231,8 @@ const ManagerDashboard: React.FC = () => {
                 <div className="card-content">
                   <p>Generate sales and inventory reports for management review.</p>
                   <div className="card-actions">
-                    <button className="action-btn primary">Sales Reports</button>
-                    <button className="action-btn secondary">Stock Reports</button>
+                    <button className="action-btn primary" onClick={() => navigate('/manager/reports')}>Sales Reports</button>
+                    <button className="action-btn secondary" onClick={() => navigate('/manager/reports')}>Stock Reports</button>
                   </div>
                 </div>
               </div>
@@ -198,8 +250,8 @@ const ManagerDashboard: React.FC = () => {
                 <div className="card-content">
                   <p>Manage supplier relationships and procurement processes.</p>
                   <div className="card-actions">
-                    <button className="action-btn primary">Manage Suppliers</button>
-                    <button className="action-btn secondary">Procurement</button>
+                    <button className="action-btn primary" onClick={() => navigate('/manager/suppliers')}>Manage Suppliers</button>
+                    <button className="action-btn secondary" onClick={() => navigate('/manager/suppliers')}>Procurement</button>
                   </div>
                 </div>
               </div>
@@ -216,8 +268,8 @@ const ManagerDashboard: React.FC = () => {
               <div className="card-content">
                 <p>Monitor and approve stock adjustments and transfers.</p>
                 <div className="card-actions">
-                  <button className="action-btn primary">Pending Adjustments</button>
-                  <button className="action-btn secondary">Movement History</button>
+                  <button className="action-btn primary" onClick={() => navigate('/manager/stock-movements')}>Pending Adjustments</button>
+                  <button className="action-btn secondary" onClick={() => navigate('/manager/stock-movements')}>Movement History</button>
                 </div>
               </div>
             </div>

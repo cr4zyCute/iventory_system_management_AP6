@@ -12,10 +12,24 @@ import '@fortawesome/react-fontawesome';
 import '@fortawesome/free-solid-svg-icons';
 
 import UserManagement from './components/admin/UserManagement';
+import CreateUser from './components/admin/CreateUser';
 import ProductManagement from './components/admin/ProductManagement';
 import CategoryManagement from './components/admin/CategoryManagement';
 import Reports from './components/admin/Reports';
 import SystemSettings from './components/admin/SystemSettings';
+
+// Manager Components
+import InventoryManagement from './components/manager/InventoryManagement';
+import PurchaseOrders from './components/manager/PurchaseOrders';
+import StaffOversight from './components/manager/StaffOversight';
+import ManagerReports from './components/manager/ManagerReports';
+import SuppliersManagement from './components/manager/SuppliersManagement';
+import StockMovements from './components/manager/StockMovements';
+
+// Staff Components
+import InventoryViewer from './components/staff/InventoryViewer';
+import TaskManagement from './components/staff/TaskManagement';
+
 import './App.css';
 
 function App() {
@@ -77,6 +91,14 @@ function App() {
             } 
           />
           <Route 
+            path="/admin/create-user" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <CreateUser />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
             path="/admin/products" 
             element={
               <ProtectedRoute allowedRoles={['admin']}>
@@ -105,6 +127,74 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <SystemSettings />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Manager Routes */}
+          <Route 
+            path="/manager/inventory" 
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <InventoryManagement />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/manager/purchase-orders" 
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <PurchaseOrders />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/manager/staff" 
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <StaffOversight />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/manager/reports" 
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <ManagerReports />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/manager/suppliers" 
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <SuppliersManagement />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/manager/stock-movements" 
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <StockMovements />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Staff Routes */}
+          <Route 
+            path="/staff/inventory" 
+            element={
+              <ProtectedRoute allowedRoles={['staff', 'manager', 'admin']}>
+                <InventoryViewer />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/staff/tasks" 
+            element={
+              <ProtectedRoute allowedRoles={['staff', 'manager', 'admin']}>
+                <TaskManagement />
               </ProtectedRoute>
             } 
           />

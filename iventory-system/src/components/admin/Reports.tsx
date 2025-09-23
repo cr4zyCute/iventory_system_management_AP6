@@ -46,26 +46,18 @@ const Reports: React.FC = () => {
       }
     } catch (err) {
       console.error('Error loading reports:', err);
-      // Mock data for now
-      setReportData({
-        totalProducts: 125,
-        totalUsers: 8,
-        lowStockItems: 12,
-        totalSales: 342,
-        monthlyRevenue: 45230,
-        topProducts: [
-        
-        ],
-        stockMovements: [
-          ]
-      });
+      setReportData(null);
     } finally {
       setLoading(false);
     }
   };
 
   const exportReport = (type: string) => {
-    // Mock export functionality
+    if (!reportData) {
+      alert('No data available to export. Please load the reports first.');
+      return;
+    }
+    
     const data = JSON.stringify(reportData, null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -141,6 +133,27 @@ const Reports: React.FC = () => {
           </div>
         </div>
 
+        {/* No Data Message */}
+        {!reportData && !loading && (
+          <div className="dashboard-card">
+            <div className="card-content" style={{ textAlign: 'center', padding: '40px' }}>
+              <div style={{ fontSize: '48px', color: '#dc3545', marginBottom: '20px' }}>
+                ⚠️
+              </div>
+              <h3 style={{ color: '#dc3545', marginBottom: '10px' }}>No Data Available</h3>
+              <p style={{ color: '#666', marginBottom: '20px' }}>
+                Unable to load report data from the database. Please check your backend connection.
+              </p>
+              <button 
+                className="action-btn primary"
+                onClick={loadReportData}
+              >
+                <i className="fa-solid fa-refresh"></i> Retry Loading Data
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Overview Stats */}
         {selectedReport === 'overview' && reportData && (
           <>
@@ -169,7 +182,7 @@ const Reports: React.FC = () => {
               <div className="stat-card">
                 <div className="stat-icon"><i className="fas fa-dollar-sign"></i></div>
                 <div className="stat-content">
-                  <div className="stat-value">${Number(reportData.monthlyRevenue).toLocaleString()}</div>
+                  <div className="stat-value">₱{(Number(reportData.monthlyRevenue) || 0).toLocaleString()}</div>
                   <div className="stat-label">Monthly Revenue</div>
                 </div>
               </div>
@@ -194,7 +207,7 @@ const Reports: React.FC = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {reportData.topProducts.map((product, index) => (
+                      {reportData.topProducts && reportData.topProducts.length > 0 ? reportData.topProducts.map((product, index) => (
                         <tr key={product.id}>
                           <td>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -216,9 +229,15 @@ const Reports: React.FC = () => {
                             </div>
                           </td>
                           <td>{product.sales}</td>
-                          <td>${Number(product.revenue).toLocaleString()}</td>
+                          <td>₱{(Number(product.revenue) || 0).toLocaleString()}</td>
                         </tr>
-                      ))}
+                      )) : (
+                        <tr>
+                          <td colSpan={3} style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
+                            No product data available
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -243,7 +262,7 @@ const Reports: React.FC = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {reportData.stockMovements.map(movement => (
+                      {reportData.stockMovements && reportData.stockMovements.length > 0 ? reportData.stockMovements.map(movement => (
                         <tr key={movement.id}>
                           <td>{movement.product_name}</td>
                           <td>
@@ -269,7 +288,13 @@ const Reports: React.FC = () => {
                           <td>{movement.quantity}</td>
                           <td>{new Date(movement.date).toLocaleDateString()}</td>
                         </tr>
-                      ))}
+                      )) : (
+                        <tr>
+                          <td colSpan={4} style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
+                            No stock movement data available
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>

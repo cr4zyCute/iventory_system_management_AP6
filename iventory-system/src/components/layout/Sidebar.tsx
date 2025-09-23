@@ -121,24 +121,36 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           icon: faBox,
           children: [
             {
-              id: 'products',
-              label: 'Products',
+              id: 'inventory-management',
+              label: 'Inventory Management',
               icon: faClipboardList,
-              path: '/manager/products'
+              path: '/manager/inventory'
             },
             {
-              id: 'stock',
-              label: 'Stock Management',
+              id: 'stock-movements',
+              label: 'Stock Movements',
               icon: faWarehouse,
-              path: '/manager/stock'
+              path: '/manager/stock-movements'
             }
           ]
         },
         {
-          id: 'sales',
-          label: 'Sales',
+          id: 'purchase-orders',
+          label: 'Purchase Orders',
           icon: faShoppingCart,
-          path: '/manager/sales'
+          path: '/manager/purchase-orders'
+        },
+        {
+          id: 'staff-oversight',
+          label: 'Staff Management',
+          icon: faUsers,
+          path: '/manager/staff'
+        },
+        {
+          id: 'suppliers',
+          label: 'Suppliers',
+          icon: faBox,
+          path: '/manager/suppliers'
         },
         {
           id: 'reports',

@@ -209,7 +209,7 @@ const ProductManagement: React.FC = () => {
       <div className="admin-dashboard">
         <div className="content-header">
           <h1 className="content-title">Product Management</h1>
-        
+        	
         </div>
 
         <div className="quick-actions">
@@ -413,10 +413,10 @@ const ProductManagement: React.FC = () => {
                         <td>
                           <div>
                             <div style={{ fontWeight: '500' }}>
-                              ${Number(product.unit_price).toFixed(2)}
+                            ₱{Number(product.unit_price).toFixed(2)}
                             </div>
                             <div style={{ fontSize: '12px', color: '#666666' }}>
-                              Cost: ${Number(product.cost_price).toFixed(2)}
+                              Cost: ₱{Number(product.cost_price).toFixed(2)}
                             </div>
                           </div>
                         </td>

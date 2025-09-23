@@ -18,6 +18,84 @@ router.get('/users', async (req, res) => {
   }
 });
 
+// Create new user
+router.post('/users', async (req, res) => {
+  try {
+    const { email, first_name, last_name, role, password, is_active = true } = req.body;
+
+    // Validate required fields
+    if (!email || !first_name || !last_name || !role || !password) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    }
+
+    // Check if email already exists
+    const existingUser = await db.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+
+    // Hash the provided password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const { rows } = await db.query(
+      `INSERT INTO users (email, password_hash, first_name, last_name, role, is_active)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING id, email, first_name, last_name, role, is_active, created_at`,
+      [email, hashedPassword, first_name, last_name, role, is_active]
+    );
+
+    res.status(201).json({
+      user: rows[0],
+      message: 'User created successfully'
+    });
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Update user
+router.put('/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { email, first_name, last_name, role, is_active } = req.body;
+
+    // Check if email already exists for another user
+    const existingUser = await db.query('SELECT id FROM users WHERE email = $1 AND id != $2', [email, id]);
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ message: 'Email already exists for another user' });
+    }
+
+    const { rows } = await db.query(
+      `UPDATE users SET
+        email = $1,
+        first_name = $2,
+        last_name = $3,
+        role = $4,
+        is_active = $5,
+        updated_at = CURRENT_TIMESTAMP
+       WHERE id = $6
+       RETURNING id, email, first_name, last_name, role, is_active, created_at`,
+      [email, first_name, last_name, role, is_active, id]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ user: rows[0] });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Toggle user active status
 router.patch('/users/:id/toggle', async (req, res) => {
   try {

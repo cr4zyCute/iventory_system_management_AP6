@@ -1,6 +1,4 @@
 const db = require('../../database');
-
-// NOTE: For production, store hashed passwords (e.g., bcrypt). This example uses plain text for simplicity.
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -25,7 +23,7 @@ exports.login = async (req, res) => {
     const user = rows[0];
     console.log('User data:', { id: user.id, email: user.email, role: user.role });
 
-    // Plain text password comparison (for your current database setup)
+    // Plain text password comparison only
     const isValid = password === user.password_hash;
     console.log('Password validation:', isValid ? 'Success' : 'Failed');
 

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import MainLayout from '../layout/MainLayout';
 import './css/dashboard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload, faPen, faSync, faUserPlus, faUserCheck, faUserSlash } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faSync, faUserPlus, faUserCheck, faUserSlash, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
   id: number;
@@ -16,10 +17,70 @@ interface User {
 }
 
 const UserManagement: React.FC = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [, setShowAddModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [addForm, setAddForm] = useState({
+    email: '',
+    first_name: '',
+    last_name: '',
+    role: 'staff',
+    is_active: true
+  });
+  const [editForm, setEditForm] = useState({
+    email: '',
+    first_name: '',
+    last_name: '',
+    role: 'staff',
+    is_active: true
+  });
+
+  const handleAddSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(addForm)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        // Add the new user to the list
+        setUsers(prev => [...prev, result.user]);
+        setShowAddModal(false);
+        setAddForm({
+          email: '',
+          first_name: '',
+          last_name: '',
+          role: 'staff',
+          is_active: true
+        });
+        alert(`User created successfully! Temporary password: changeme123`);
+      } else {
+        const error = await response.json();
+        setError(error.message || 'Failed to create user');
+      }
+    } catch (err) {
+      setError('Error creating user');
+      console.error('Create error:', err);
+    }
+  };
+
+  const closeAddModal = () => {
+    setShowAddModal(false);
+    setAddForm({
+      email: '',
+      first_name: '',
+      last_name: '',
+      role: 'staff',
+      is_active: true
+    });
+  };
 
   useEffect(() => {
     loadUsers();
@@ -91,6 +152,56 @@ const UserManagement: React.FC = () => {
     }
   };
 
+  const openEditModal = (user: User) => {
+    setEditingUser(user);
+    setEditForm({
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      role: user.role,
+      is_active: user.is_active
+    });
+    setShowEditModal(true);
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+
+    try {
+      const response = await fetch(`/api/admin/users/${editingUser.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm)
+      });
+
+      if (response.ok) {
+        setUsers(users.map(user => 
+          user.id === editingUser.id ? { ...user, ...editForm } : user
+        ));
+        setShowEditModal(false);
+        setEditingUser(null);
+      } else {
+        setError('Failed to update user');
+      }
+    } catch (err) {
+      setError('Error updating user');
+      console.error('Update error:', err);
+    }
+  };
+
+  const closeEditModal = () => {
+    setShowEditModal(false);
+    setEditingUser(null);
+    setEditForm({
+      email: '',
+      first_name: '',
+      last_name: '',
+      role: 'staff',
+      is_active: true
+    });
+  };
+
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case 'admin': return '#dc3545';
@@ -105,21 +216,22 @@ const UserManagement: React.FC = () => {
       <div className="admin-dashboard">
         <div className="content-header">
           <h1 className="content-title">User Management</h1>
-          
         </div>
 
         <div className="quick-actions">
-          <button 
-            className="quick-action-btn"
-            onClick={() => setShowAddModal(true)}
+          <button
+            className="action-btn primary"
+            onClick={() => navigate('/admin/create-user')}
+            style={{ marginRight: '10px' }}
           >
-              <FontAwesomeIcon icon={faUserPlus} className="mr-2" />
+            <FontAwesomeIcon icon={faUserPlus} style={{ marginRight: '8px' }} />
+            Create New User
           </button>
           <button className="quick-action-btn">
-          <FontAwesomeIcon icon={faDownload} />
+            <FontAwesomeIcon icon={faDownload} />
           </button>
-          <button className="quick-action-btn">
-          <FontAwesomeIcon icon={faSync} />
+          <button className="quick-action-btn" onClick={loadUsers}>
+            <FontAwesomeIcon icon={faSync} />
           </button>
         </div>
 
@@ -225,8 +337,10 @@ const UserManagement: React.FC = () => {
                           <button 
                             className="action-btn secondary"
                             style={{ minWidth: 'auto', padding: '6px 12px' }}
+                            onClick={() => openEditModal(user)}
+                            title="Edit User"
                           >
-                           <FontAwesomeIcon icon={faPen} /> 
+                           <FontAwesomeIcon icon={faEdit} /> 
                           </button>
                           <button 
                             className="action-btn secondary"
@@ -244,6 +358,174 @@ const UserManagement: React.FC = () => {
             )}
           </div>
         </div>
+
+        {/* Edit User Modal */}
+        {showEditModal && editingUser && (
+          <div className="modal-overlay" onClick={closeEditModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>Edit User</h3>
+                <button className="modal-close" onClick={closeEditModal}>
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+              </div>
+              <form onSubmit={handleEditSubmit}>
+                <div className="modal-body">
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label>Email *</label>
+                      <input
+                        type="email"
+                        className="form-input"
+                        value={editForm.email}
+                        onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>First Name *</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={editForm.first_name}
+                        onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Last Name *</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={editForm.last_name}
+                        onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Role *</label>
+                      <select
+                        className="form-select"
+                        value={editForm.role}
+                        onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
+                        required
+                      >
+                        <option value="staff">Staff</option>
+                        <option value="manager">Manager</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={editForm.is_active}
+                          onChange={(e) => setEditForm({ ...editForm, is_active: e.target.checked })}
+                          style={{ marginRight: '8px' }}
+                        />
+                        Active User
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="action-btn secondary" onClick={closeEditModal}>
+                    Cancel
+                  </button>
+                  <button type="submit" className="action-btn primary">
+                    Update User
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Add User Modal */}
+        {showAddModal && (
+          <div className="modal-overlay" onClick={closeAddModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>Add New User</h3>
+                <button className="modal-close" onClick={closeAddModal}>
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+              </div>
+              <form onSubmit={handleAddSubmit}>
+                <div className="modal-body">
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label>Email *</label>
+                      <input
+                        type="email"
+                        className="form-input"
+                        value={addForm.email}
+                        onChange={(e) => setAddForm({ ...addForm, email: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>First Name *</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={addForm.first_name}
+                        onChange={(e) => setAddForm({ ...addForm, first_name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Last Name *</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={addForm.last_name}
+                        onChange={(e) => setAddForm({ ...addForm, last_name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Role *</label>
+                      <select
+                        className="form-select"
+                        value={addForm.role}
+                        onChange={(e) => setAddForm({ ...addForm, role: e.target.value })}
+                        required
+                      >
+                        <option value="staff">Staff</option>
+                        <option value="manager">Manager</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={addForm.is_active}
+                          onChange={(e) => setAddForm({ ...addForm, is_active: e.target.checked })}
+                          style={{ marginRight: '8px' }}
+                        />
+                        Active User
+                      </label>
+                    </div>
+                  </div>
+                  <div className="alert info" style={{ marginTop: '15px' }}>
+                    <span>ℹ️</span>
+                    New users will receive a temporary password: <strong>changeme123</strong>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="action-btn secondary" onClick={closeAddModal}>
+                    Cancel
+                  </button>
+                  <button type="submit" className="action-btn primary">
+                    Create User
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </MainLayout>
   );

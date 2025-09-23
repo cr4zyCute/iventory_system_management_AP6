@@ -4,6 +4,8 @@ const { Pool } = require('pg');
 const cors = require('cors');
 const authRoutes = require('./src/routes/authRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
+const managerRoutes = require('./src/routes/managerRoutes');
+const staffRoutes = require('./src/routes/staffRoutes');
 
 
 const app = express();
@@ -16,6 +18,8 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/manager', managerRoutes);
+app.use('/api/staff', staffRoutes);
 
 // Test route
 app.get('/api/test', (req, res) => {
