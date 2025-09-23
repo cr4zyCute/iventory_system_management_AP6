@@ -1,47 +1,103 @@
-import { useState, useEffect } from 'react';
-import { testConnection } from './api/api';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './routes/ProtectedRoute';
 import Login from './pages/login';
+import Dashboard from './pages/Dashboard';
+import AdminDashboard from './components/admin/AdminDashboard';
+import ManagerDashboard from './components/manager/ManagerDashboard';
+import StaffDashboard from './components/staff/StaffDashboard';
+// Admin Components
+import UserManagement from './components/admin/UserManagement';
+import ProductManagement from './components/admin/ProductManagement';
+import Reports from './components/admin/Reports';
+import SystemSettings from './components/admin/SystemSettings';
 import './App.css';
 
 function App() {
-  const [backendMessage, setBackendMessage] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    const checkBackend = async () => {
-      try {
-        const data = await testConnection();
-        setBackendMessage(data.message);
-        setError('');
-      } catch (err) {
-        setError('Failed to connect to the backend. Make sure your backend server is running.');
-        console.error('Backend connection error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkBackend();
-  }, []);
-
   return (
-    <div className="app">
-      <h1>Inventory System</h1>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Redirect root to dashboard if authenticated, otherwise to login */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          
+          {/* Public route */}
+          <Route path="/login" element={<Login />} />
+          
+          {/* Role-based protected routes */}
+          <Route 
+            path="/admin-dashboard" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/manager-dashboard" 
+            element={
+              <ProtectedRoute allowedRoles={['manager']}>
+                <ManagerDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/staff-dashboard" 
+            element={
+              <ProtectedRoute allowedRoles={['staff']}>
+                <StaffDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Legacy dashboard route - redirects based on role */}
+          <Route 
+            path="/dashboard" 
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
 
-      <div className="status">
-        <h2>Connection Status</h2>
-        {loading ? (
-          <p>Connecting to backend...</p>
-        ) : error ? (
-          <p className="error">{error}</p>
-        ) : (
-          <p className="success">✅ {backendMessage}</p>
-        )}
-      </div>
-
-      <Login />
-    </div>
+          {/* Admin Routes */}
+          <Route 
+            path="/admin/users" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <UserManagement />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/products" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <ProductManagement />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/reports" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Reports />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/settings" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <SystemSettings />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

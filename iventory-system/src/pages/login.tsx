@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { login } from '../api/api';
+import { useAuth } from '../context/AuthContext';
+import './css/login.css';
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
+  const navigate = useNavigate();
+  const { login: authLogin } = useAuth();
+  const [email, setemail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -14,9 +19,14 @@ const Login: React.FC = () => {
     setSuccess('');
     setLoading(true);
     try {
-      const res = await login({ username, password });
+      const res = await login({ email, password });
       setSuccess(res.message || 'Logged in successfully');
-      // TODO: Store token or user info if backend returns it
+      
+      // Store user info and redirect to appropriate dashboard based on role
+      if (res.user) {
+        authLogin(res.user);
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       const msg = err?.message || 'Login failed';
       setError(msg);
@@ -26,45 +36,79 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-      <form onSubmit={handleSubmit} style={{ width: 320, padding: 24, border: '1px solid #ddd', borderRadius: 8, background: '#fff' }}>
-        <h2 style={{ marginTop: 0, marginBottom: 16 }}>Login</h2>
-        {error && (
-          <div style={{ background: '#fde8e8', color: '#c0392b', padding: '8px 12px', borderRadius: 4, marginBottom: 12 }}>
-            {error}
+    <div className="login-container">
+      <div className="login-card">
+        <div className="login-header">
+          <div className="login-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
           </div>
-        )}
-        {success && (
-          <div style={{ background: '#e8f5e9', color: '#2e7d32', padding: '8px 12px', borderRadius: 4, marginBottom: 12 }}>
-            {success}
+          <h1 className="login-title">Inventory System</h1>
+          <p className="login-subtitle">Sign in to your account</p>
+        </div>
+        
+        <form className="login-form" onSubmit={handleSubmit}>
+          {error && (
+            <div className="alert alert-error">
+              <svg className="alert-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              {error}
+            </div>
+          )}
+          
+          {success && (
+            <div className="alert alert-success">
+              <svg className="alert-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              {success}
+            </div>
+          )}
+
+          <div className="form-group">
+            <label htmlFor="email" className="form-label">
+              email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="text"
+              required
+              value={email}
+              onChange={(e) => setemail(e.target.value)}
+              className="form-input"
+              placeholder="Enter your email"
+            />
           </div>
-        )}
-        <div style={{ marginBottom: 12 }}>
-          <label htmlFor="username" style={{ display: 'block', marginBottom: 6 }}>Username</label>
-          <input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            style={{ width: '100%', padding: 10, borderRadius: 4, border: '1px solid #ccc' }}
-          />
-        </div>
-        <div style={{ marginBottom: 16 }}>
-          <label htmlFor="password" style={{ display: 'block', marginBottom: 6 }}>Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ width: '100%', padding: 10, borderRadius: 4, border: '1px solid #ccc' }}
-          />
-        </div>
-        <button type="submit" disabled={loading} style={{ width: '100%', padding: 10, borderRadius: 4, border: 'none', background: '#4a90e2', color: '#fff', cursor: 'pointer' }}>
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
+
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-input"
+              placeholder="Enter your password"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="login-button"
+          >
+            {loading && <span className="loading-spinner"></span>}
+            {loading ? 'Signing in...' : 'Sign in'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
