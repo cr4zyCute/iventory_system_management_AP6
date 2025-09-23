@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import MainLayout from '../layout/MainLayout';
 import './css/dashboard.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowCircleDown, faArrowCircleUp, faChartBar, faChartSimple } from '@fortawesome/free-solid-svg-icons';
 
 interface ReportData {
   totalProducts: number;
   totalUsers: number;
   lowStockItems: number;
   totalSales: number;
-  monthlyRevenue: number;
+  monthlyRevenue: number | string; 
   topProducts: Array<{
     id: number;
     name: string;
     sales: number;
-    revenue: number;
+    revenue: number | string; 
   }>;
   stockMovements: Array<{
     id: number;
@@ -87,7 +89,7 @@ const Reports: React.FC = () => {
 
   if (loading) {
     return (
-      <MainLayout title="📊 Reports">
+      <MainLayout title="Reports">
         <div style={{ textAlign: 'center', padding: '40px' }}>
           <div className="loading-spinner"></div>
           <p>Loading reports...</p>
@@ -97,7 +99,7 @@ const Reports: React.FC = () => {
   }
 
   return (
-    <MainLayout title="📊 Reports">
+    <MainLayout title=" Reports">
       <div className="admin-dashboard">
         <div className="content-header">
           <h1 className="content-title">Reports & Analytics</h1>
@@ -109,19 +111,19 @@ const Reports: React.FC = () => {
             className="quick-action-btn"
             onClick={() => exportReport('overview')}
           >
-            📊 Export Overview
+            <i className="fa-solid fa-download"></i> Export Overview
           </button>
           <button 
             className="quick-action-btn"
             onClick={() => exportReport('sales')}
           >
-            💰 Export Sales
+            <i className="fa-solid fa-dollar-sign"></i> Export Sales
           </button>
           <button 
             className="quick-action-btn"
             onClick={loadReportData}
           >
-            🔄 Refresh
+            <i className="fa-solid fa-refresh"></i> Refresh
           </button>
         </div>
 
@@ -130,10 +132,10 @@ const Reports: React.FC = () => {
           <div className="card-content" style={{ padding: '15px 20px' }}>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {[
-                { id: 'overview', label: 'Overview', icon: '📊' },
-                { id: 'sales', label: 'Sales Report', icon: '💰' },
-                { id: 'inventory', label: 'Inventory Report', icon: '📦' },
-                { id: 'users', label: 'User Activity', icon: '👥' }
+                { id: 'overview', label: 'Overview', icon: <i className="fas fa-home"></i> },
+                { id: 'sales', label: 'Sales Report', icon: <i className="fas fa-dollar-sign "></i> },
+                { id: 'inventory', label: 'Inventory Report', icon: <i className="fas fa-box"></i> },
+                { id: 'users', label: 'User Activity', icon: <i className="fas fa-users"></i> }
               ].map(report => (
                 <button
                   key={report.id}
@@ -153,30 +155,30 @@ const Reports: React.FC = () => {
           <>
             <div className="stats-grid">
               <div className="stat-card">
-                <div className="stat-icon">📦</div>
+                <div className="stat-icon"><i className="fas fa-box"></i></div>
                 <div className="stat-content">
                   <div className="stat-value">{reportData.totalProducts}</div>
                   <div className="stat-label">Total Products</div>
                 </div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">👥</div>
+                <div className="stat-icon"><i className="fas fa-user"></i></div>
                 <div className="stat-content">
                   <div className="stat-value">{reportData.totalUsers}</div>
                   <div className="stat-label">Total Users</div>
                 </div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">⚠️</div>
+                <div className="stat-icon"><i className="fas fa-box"></i></div>
                 <div className="stat-content">
                   <div className="stat-value">{reportData.lowStockItems}</div>
                   <div className="stat-label">Low Stock Items</div>
                 </div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">💰</div>
+                <div className="stat-icon"><i className="fas fa-dollar-sign"></i></div>
                 <div className="stat-content">
-                  <div className="stat-value">${reportData.monthlyRevenue.toLocaleString()}</div>
+                  <div className="stat-value">${Number(reportData.monthlyRevenue).toLocaleString()}</div>
                   <div className="stat-label">Monthly Revenue</div>
                 </div>
               </div>
@@ -187,7 +189,7 @@ const Reports: React.FC = () => {
               <div className="dashboard-card">
                 <div className="card-header">
                   <h3 className="card-title">
-                    <span className="card-icon">🏆</span>
+                    <span className="card-icon"><i className="fas fa-trophy"></i></span>
                     Top Selling Products
                   </h3>
                 </div>
@@ -223,7 +225,7 @@ const Reports: React.FC = () => {
                             </div>
                           </td>
                           <td>{product.sales}</td>
-                          <td>${product.revenue.toLocaleString()}</td>
+                          <td>${Number(product.revenue).toLocaleString()}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -235,7 +237,7 @@ const Reports: React.FC = () => {
               <div className="dashboard-card">
                 <div className="card-header">
                   <h3 className="card-title">
-                    <span className="card-icon">📈</span>
+                    <span className="card-icon"><FontAwesomeIcon icon={faChartSimple} /></span>
                     Recent Stock Movements
                   </h3>
                 </div>
@@ -262,7 +264,15 @@ const Reports: React.FC = () => {
                               color: '#ffffff',
                               backgroundColor: movement.movement_type === 'in' ? '#28a745' : '#dc3545'
                             }}>
-                              {movement.movement_type === 'in' ? '📈 IN' : '📉 OUT'}
+                             {movement.movement_type === 'in' ? (
+                            <span>
+                              <FontAwesomeIcon icon={faArrowCircleUp} className="text-green-500" /> IN
+                            </span>
+                          ) : (
+                            <span>
+                              <FontAwesomeIcon icon={faArrowCircleDown} className="text-red-500" /> OUT
+                            </span>
+                          )}
                             </span>
                           </td>
                           <td>{movement.quantity}</td>
@@ -282,7 +292,7 @@ const Reports: React.FC = () => {
           <div className="dashboard-card">
             <div className="card-header">
               <h3 className="card-title">
-                <span className="card-icon">📊</span>
+                <span className="card-icon"><FontAwesomeIcon icon={faChartBar} className="mr-2" /></span>
                 {selectedReport.charAt(0).toUpperCase() + selectedReport.slice(1)} Report
               </h3>
             </div>

@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import MainLayout from '../layout/MainLayout';
 import './css/dashboard.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faFloppyDisk,
+  faRotateRight,
+  faFileExport,
+  faExclamationTriangle,
+  faCheckCircle,
+  faBuilding,
+  faDollarSign,
+  faWrench,
+  faScrewdriverWrench,
+  faClipboardList,
+  faTrash
+} from '@fortawesome/free-solid-svg-icons';
 
 interface SystemSetting {
   id: number;
@@ -164,7 +178,7 @@ const SystemSettings: React.FC = () => {
   };
 
   return (
-    <MainLayout title="⚙️ System Settings">
+    <MainLayout title="System Settings">
       <div className="admin-dashboard">
         <div className="content-header">
           <h1 className="content-title">System Settings</h1>
@@ -177,22 +191,28 @@ const SystemSettings: React.FC = () => {
             onClick={saveSettings}
             disabled={saving}
           >
-            {saving ? '💾 Saving...' : '💾 Save Settings'}
+            <FontAwesomeIcon icon={faFloppyDisk} /> {saving ? 'Saving...' : 'Save Settings'}
           </button>
           <button 
             className="quick-action-btn"
             onClick={loadSettings}
           >
-            🔄 Reset Changes
+            <FontAwesomeIcon icon={faRotateRight} /> Reset Changes
           </button>
           <button className="quick-action-btn">
-            📋 Export Config
+            <FontAwesomeIcon icon={faFileExport} /> Export Config
           </button>
         </div>
 
         {message && (
           <div className={`alert ${message.includes('Error') ? 'error' : 'success'}`}>
-            <span>{message.includes('Error') ? '⚠️' : '✅'}</span>
+            <span>
+              {message.includes('Error') ? (
+                <FontAwesomeIcon icon={faExclamationTriangle} />
+              ) : (
+                <FontAwesomeIcon icon={faCheckCircle} />
+              )}
+            </span>
             {message}
           </div>
         )}
@@ -202,7 +222,7 @@ const SystemSettings: React.FC = () => {
           <div className="dashboard-card">
             <div className="card-header">
               <h3 className="card-title">
-                <span className="card-icon">🏢</span>
+                <span className="card-icon"><FontAwesomeIcon icon={faBuilding} /></span>
                 Company Information
               </h3>
             </div>
@@ -235,7 +255,7 @@ const SystemSettings: React.FC = () => {
           <div className="dashboard-card">
             <div className="card-header">
               <h3 className="card-title">
-                <span className="card-icon">💰</span>
+                <span className="card-icon"><FontAwesomeIcon icon={faDollarSign} /></span>
                 Financial Settings
               </h3>
             </div>
@@ -271,7 +291,7 @@ const SystemSettings: React.FC = () => {
           <div className="dashboard-card">
             <div className="card-header">
               <h3 className="card-title">
-                <span className="card-icon">🔧</span>
+                <span className="card-icon"><FontAwesomeIcon icon={faWrench} /></span>
                 System Preferences
               </h3>
             </div>
@@ -309,7 +329,7 @@ const SystemSettings: React.FC = () => {
           <div className="dashboard-card">
             <div className="card-header">
               <h3 className="card-title">
-                <span className="card-icon">🛠️</span>
+                <span className="card-icon"><FontAwesomeIcon icon={faScrewdriverWrench} /></span>
                 System Maintenance
               </h3>
             </div>
@@ -321,7 +341,7 @@ const SystemSettings: React.FC = () => {
                     Create a backup of the entire database
                   </p>
                   <button className="action-btn secondary">
-                    💾 Create Backup
+                    <FontAwesomeIcon icon={faFloppyDisk} /> Create Backup
                   </button>
                 </div>
                 
@@ -331,7 +351,7 @@ const SystemSettings: React.FC = () => {
                     View and download system logs
                   </p>
                   <button className="action-btn secondary">
-                    📋 View Logs
+                    <FontAwesomeIcon icon={faClipboardList} /> View Logs
                   </button>
                 </div>
 
@@ -341,7 +361,7 @@ const SystemSettings: React.FC = () => {
                     Clear system cache to improve performance
                   </p>
                   <button className="action-btn secondary">
-                    🗑️ Clear Cache
+                    <FontAwesomeIcon icon={faTrash} /> Clear Cache
                   </button>
                 </div>
               </div>

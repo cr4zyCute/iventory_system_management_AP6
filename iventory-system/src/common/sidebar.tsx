@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { hasPermission } from './permissions';
 import './css/sidebar.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChartBar } from '@fortawesome/free-solid-svg-icons';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -36,7 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {/* Dashboard */}
           <div className="menu-item">
             <div className="menu-item-content">
-              <span className="menu-item-icon">📊</span>
+              <span className="menu-item-icon"><FontAwesomeIcon icon={faChartBar} /></span>
               <span className="menu-item-label">Dashboard</span>
             </div>
           </div>

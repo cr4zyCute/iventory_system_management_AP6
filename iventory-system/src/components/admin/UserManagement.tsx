@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import MainLayout from '../layout/MainLayout';
 import './css/dashboard.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload, faPen, faSync, faUserPlus, faUserCheck, faUserSlash } from '@fortawesome/free-solid-svg-icons';
 
 interface User {
   id: number;
@@ -99,11 +101,11 @@ const UserManagement: React.FC = () => {
   };
 
   return (
-    <MainLayout title="👥 User Management">
+    <MainLayout title=" User Management">
       <div className="admin-dashboard">
         <div className="content-header">
           <h1 className="content-title">User Management</h1>
-          <p className="content-subtitle">Manage system users and their permissions</p>
+          
         </div>
 
         <div className="quick-actions">
@@ -111,13 +113,13 @@ const UserManagement: React.FC = () => {
             className="quick-action-btn"
             onClick={() => setShowAddModal(true)}
           >
-            ➕ Add New User
+              <FontAwesomeIcon icon={faUserPlus} className="mr-2" />
           </button>
           <button className="quick-action-btn">
-            📊 Export Users
+          <FontAwesomeIcon icon={faDownload} />
           </button>
           <button className="quick-action-btn">
-            🔄 Refresh
+          <FontAwesomeIcon icon={faSync} />
           </button>
         </div>
 
@@ -131,7 +133,7 @@ const UserManagement: React.FC = () => {
         <div className="dashboard-card">
           <div className="card-header">
             <h3 className="card-title">
-              <span className="card-icon">👥</span>
+              <span className="card-icon"><i class="fa-solid fa-users"></i></span>
               System Users ({users.length})
             </h3>
           </div>
@@ -224,14 +226,14 @@ const UserManagement: React.FC = () => {
                             className="action-btn secondary"
                             style={{ minWidth: 'auto', padding: '6px 12px' }}
                           >
-                            ✏️ Edit
+                           <FontAwesomeIcon icon={faPen} /> 
                           </button>
                           <button 
                             className="action-btn secondary"
                             style={{ minWidth: 'auto', padding: '6px 12px' }}
                             onClick={() => handleToggleActive(user.id, user.is_active)}
                           >
-                            {user.is_active ? '🚫 Disable' : '✅ Enable'}
+                            {user.is_active ? <FontAwesomeIcon icon={faUserSlash} /> : <FontAwesomeIcon icon={faUserCheck} />}
                           </button>
                         </div>
                       </td>

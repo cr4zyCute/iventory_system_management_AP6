@@ -3,7 +3,18 @@ import { useAuth } from '../../context/AuthContext';
 import { hasPermission } from '../../common/permissions';
 import MainLayout from '../layout/MainLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClipboardList, faCheckCircle, faClock, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { 
+  faClipboardList, 
+  faCheckCircle, 
+  faClock, 
+  faExclamationTriangle,
+  faTasks,
+  faBox,
+  faArrowsRotate,
+  faDollarSign,
+  faBell,
+  faUser
+} from '@fortawesome/free-solid-svg-icons';
 import './css/dashboard.css';
 
 const StaffDashboard: React.FC = () => {
@@ -49,7 +60,7 @@ const StaffDashboard: React.FC = () => {
 
 
   return (
-    <MainLayout title="💼 Staff Dashboard">
+    <MainLayout title="Staff Dashboard">
       <div className="staff-dashboard">
         <div className="content-header">
           <h1 className="content-title">Staff Dashboard</h1>
@@ -107,7 +118,7 @@ const StaffDashboard: React.FC = () => {
             <div className="dashboard-card">
               <div className="card-header">
                 <h3 className="card-title">
-                  <span className="card-icon">✅</span>
+                  <span className="card-icon"><FontAwesomeIcon icon={faTasks} /></span>
                   My Tasks
                 </h3>
               </div>
@@ -124,7 +135,7 @@ const StaffDashboard: React.FC = () => {
             <div className="dashboard-card">
               <div className="card-header">
                 <h3 className="card-title">
-                  <span className="card-icon">📦</span>
+                  <span className="card-icon"><FontAwesomeIcon icon={faBox} /></span>
                   Inventory Items
                 </h3>
               </div>
@@ -142,7 +153,7 @@ const StaffDashboard: React.FC = () => {
               <div className="dashboard-card">
                 <div className="card-header">
                   <h3 className="card-title">
-                    <span className="card-icon">🔄</span>
+                    <span className="card-icon"><FontAwesomeIcon icon={faArrowsRotate} /></span>
                     Stock Updates
                   </h3>
                 </div>
@@ -161,7 +172,7 @@ const StaffDashboard: React.FC = () => {
               <div className="dashboard-card">
                 <div className="card-header">
                   <h3 className="card-title">
-                    <span className="card-icon">💰</span>
+                    <span className="card-icon"><FontAwesomeIcon icon={faDollarSign} /></span>
                     Sales
                   </h3>
                 </div>
@@ -179,7 +190,7 @@ const StaffDashboard: React.FC = () => {
             <div className="dashboard-card">
               <div className="card-header">
                 <h3 className="card-title">
-                  <span className="card-icon">🔔</span>
+                  <span className="card-icon"><FontAwesomeIcon icon={faBell} /></span>
                   Notifications
                 </h3>
               </div>
@@ -196,7 +207,7 @@ const StaffDashboard: React.FC = () => {
             <div className="dashboard-card">
               <div className="card-header">
                 <h3 className="card-title">
-                  <span className="card-icon">👤</span>
+                  <span className="card-icon"><FontAwesomeIcon icon={faUser} /></span>
                   My Profile
                 </h3>
               </div>

@@ -1,7 +1,7 @@
 /* Modern Login Page Styles */
 .login-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #a4a4a4 0%, #353535 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,7 +28,7 @@
 .login-icon {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #a4a4a4 0%, #353535 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -98,7 +98,7 @@
 }
 
 .login-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #7a7a7a 0%, #505050 100%);
   color: white;
   border: none;
   padding: 1rem;

@@ -22,7 +22,7 @@ const AdminDashboard: React.FC = () => {
     totalProducts: 0,
     totalUsers: 0,
     lowStockItems: 0,
-    totalSales: 0
+    totalSales: 0 as number | string
   });
 
   useEffect(() => {
@@ -73,19 +73,19 @@ const AdminDashboard: React.FC = () => {
 
 
   return (
-    <MainLayout title="🛡️ Admin Dashboard">
+    <MainLayout title="Admin Dashboard">
       <div className="admin-dashboard">
         <div className="content-header">
           <h1 className="content-title">Admin Dashboard</h1>
-          <p className="content-subtitle">System overview and management tools</p>
+          
         </div>
 
-        <div className="status-bar">
+        {/* <div className="status-bar">
           <div className="status-indicator">
             <span className={`status-dot ${backendStatus}`}></span>
             Backend: {backendStatus === 'checking' ? 'Checking...' : backendStatus}
           </div>
-        </div>
+        </div> */}
 
         {/* Stats Overview */}
         <div className="stats-grid">
@@ -121,7 +121,7 @@ const AdminDashboard: React.FC = () => {
               <FontAwesomeIcon icon={faDollarSign} />
             </div>
             <div className="stat-content">
-              <div className="stat-value">${stats.totalSales.toLocaleString()}</div>
+              <div className="stat-value">${Number(stats.totalSales).toLocaleString()}</div>
               <div className="stat-label">Total Sales</div>
             </div>
           </div>

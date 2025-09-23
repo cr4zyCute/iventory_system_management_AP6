@@ -7,8 +7,13 @@ import AdminDashboard from './components/admin/AdminDashboard';
 import ManagerDashboard from './components/manager/ManagerDashboard';
 import StaffDashboard from './components/staff/StaffDashboard';
 // Admin Components
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import '@fortawesome/react-fontawesome';
+import '@fortawesome/free-solid-svg-icons';
+
 import UserManagement from './components/admin/UserManagement';
 import ProductManagement from './components/admin/ProductManagement';
+import CategoryManagement from './components/admin/CategoryManagement';
 import Reports from './components/admin/Reports';
 import SystemSettings from './components/admin/SystemSettings';
 import './App.css';
@@ -76,6 +81,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <ProductManagement />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/categories" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <CategoryManagement />
               </ProtectedRoute>
             } 
           />
