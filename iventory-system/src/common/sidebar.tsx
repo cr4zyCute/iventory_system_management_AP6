@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { hasPermission } from './permissions';
 import './css/sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faBox, faCartShopping, faChartBar, faChartLine, faClipboardList, faGear, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {/* Products - All roles can view */}
           <div className="menu-item">
             <div className="menu-item-content">
-              <span className="menu-item-icon">📦</span>
+              <span className="menu-item-icon"><FontAwesomeIcon icon={faBox} /></span>
               <span className="menu-item-label">Products</span>
             </div>
           </div>
@@ -55,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {hasPermission(user?.role || 'staff', 'sales.read') && (
             <div className="menu-item">
               <div className="menu-item-content">
-                <span className="menu-item-icon">🛒</span>
+                <span className="menu-item-icon"><FontAwesomeIcon icon={faCartShopping} /></span>
                 <span className="menu-item-label">Sales</span>
               </div>
             </div>
@@ -65,7 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {hasPermission(user?.role || 'staff', 'purchase_orders.read') && (
             <div className="menu-item">
               <div className="menu-item-content">
-                <span className="menu-item-icon">📋</span>
+                <span className="menu-item-icon"><FontAwesomeIcon icon={faClipboardList} /></span>
                 <span className="menu-item-label">Purchase Orders</span>
               </div>
             </div>
@@ -75,7 +75,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {hasPermission(user?.role || 'staff', 'reports.stock') && (
             <div className="menu-item">
               <div className="menu-item-content">
-                <span className="menu-item-icon">📈</span>
+                <span className="menu-item-icon"><FontAwesomeIcon icon={faChartLine} /></span>
                 <span className="menu-item-label">Reports</span>
               </div>
             </div>
@@ -85,7 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {hasPermission(user?.role || 'staff', 'users.read') && (
             <div className="menu-item">
               <div className="menu-item-content">
-                <span className="menu-item-icon">👥</span>
+                <span className="menu-item-icon"><FontAwesomeIcon icon={faUsers} /></span>
                 <span className="menu-item-label">Users</span>
               </div>
             </div>
@@ -95,7 +95,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {hasPermission(user?.role || 'staff', 'settings.read') && (
             <div className="menu-item">
               <div className="menu-item-content">
-                <span className="menu-item-icon">⚙️</span>
+                <span className="menu-item-icon"><FontAwesomeIcon icon={faGear} /></span>
                 <span className="menu-item-label">Settings</span>
               </div>
             </div>

@@ -19,7 +19,7 @@ const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [, setShowAddModal] = useState(false);
 
   useEffect(() => {
     loadUsers();
@@ -133,7 +133,7 @@ const UserManagement: React.FC = () => {
         <div className="dashboard-card">
           <div className="card-header">
             <h3 className="card-title">
-              <span className="card-icon"><i class="fa-solid fa-users"></i></span>
+              <span className="card-icon"><i className="fa-solid fa-users"></i></span>
               System Users ({users.length})
             </h3>
           </div>
